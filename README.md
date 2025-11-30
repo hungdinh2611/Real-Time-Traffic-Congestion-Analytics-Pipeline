@@ -5,3 +5,4 @@ A real-time data pipeline for collecting, processing, and analyzing live traffic
 - Real-time traffic data simulation using Kafka
 - Stream processing with PySpark Structured Streaming or pure‑Python consumer
 - Parquet-based data lake (bronze layer)
+- Train a RFC model for prediction
