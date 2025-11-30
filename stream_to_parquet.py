@@ -11,7 +11,7 @@ from pyspark.sql.types import StructType, StringType, IntegerType
 # Build the Spark session
 spark = (
     SparkSession.builder
-        .appName(" ")
+        .appName("Traffic Congestion")
         .config(
           "spark.jars.packages",
           "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1"
