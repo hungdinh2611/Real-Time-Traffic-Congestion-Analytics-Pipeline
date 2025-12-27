@@ -55,7 +55,7 @@ def predict(record: TrafficRecord):
 
         pred = model.predict(X)[0]
         pred = min(pred, record.speed * 1.5)
-        congestion = congestion_level(record.speed, pred)
+        congestion = congestion_level(record.sensor, record.speed, record.timestamp)
         return {
             "sensor": record.sensor,
             "current_speed": record.speed,
