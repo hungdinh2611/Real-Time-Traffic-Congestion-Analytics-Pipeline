@@ -117,7 +117,7 @@ This generates simulated traffic data every 2 seconds.
 
 ### Step 4: Collect Bronze Data (Terminal 2)
 ```bash
-python consumer_to_parquet.py
+python stream_to_parquet.py
 ```
 Let this run for a few minutes to collect training data. Stop with `Ctrl+C` when you have enough data.
 
