@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import joblib
 import pandas as pd
+from predict_congestion_level import predict_cong_level 
 
 # ─── 1) Define the input schema ─────────────────────────────────
 class TrafficRecord(BaseModel):
@@ -11,24 +12,14 @@ class TrafficRecord(BaseModel):
 
 # ─── 2) Load the trained model ───────────────────────────────────
 model = joblib.load("model.joblib")
-def congestion_level(speed_now, speed_pred):
-    if speed_now <= 5:
+def congestion_level(sensor, speed, timestamp):
+    temp = predict_cong_level(sensor, speed, timestamp)
+    if temp >= 2:
         return "HIGH"
-
-    if speed_now <= 15:
-        return "HIGH"
-
-    if speed_now <= 30:
-        if speed_pred < speed_now * 0.8:
-            return "HIGH"
-        else:
-            return "MEDIUM"
-
-    if speed_pred < speed_now * 0.7:
+    elif temp == 1:
         return "MEDIUM"
-
-    return "LOW"
-
+    else:
+        return "LOW"
 
 # We need to recreate the same features you trained on
 SENSOR_COLUMNS = [col for col in model.feature_names_in_ if col.startswith("sensor_")]
@@ -64,7 +55,7 @@ def predict(record: TrafficRecord):
 
         pred = model.predict(X)[0]
         pred = min(pred, record.speed * 1.5)
-        congestion = congestion_level(record.speed, pred)
+        congestion = congestion_level(record.sensor, record.speed, record.timestamp)
         return {
             "sensor": record.sensor,
             "current_speed": record.speed,

@@ -2,22 +2,16 @@ import json, time, requests
 import pandas as pd
 from kafka import KafkaConsumer
 from pathlib import Path
+from predict_congestion_level import predict_cong_level 
 
-def congestion_level(speed_now, speed_pred):
-
-    if speed_now <= 5:
+def congestion_level(sensor, speed, timestamp):
+    temp = predict_cong_level(sensor, speed, timestamp)
+    if temp >= 2:
         return "HIGH"
-
-    if speed_pred <= 15:
-        return "HIGH"
-
-    if speed_pred < speed_now * 0.6:
+    elif temp == 1:
         return "MEDIUM"
-
-    if speed_pred < 40:
-        return "MEDIUM"
-
-    return "LOW"
+    else:
+        return "LOW"
 
 consumer = KafkaConsumer(
     "traffic",
